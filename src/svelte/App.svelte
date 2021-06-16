@@ -3,7 +3,7 @@
 </script>
 
 <style global lang="less">
-  @import "./styles/global.less";
+  @import "../styles/global.less";
 
   main {
     position: fixed;
