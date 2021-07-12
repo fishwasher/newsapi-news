@@ -43,13 +43,13 @@ export const isEmpty = x =>
   isNone(x) ||
   x === "" ||
   (typeof x === "number" && isNaN(x)) ||
-  !listSize(x) ||
-  !propNum(x);
+  (isArray(x) && !x.length) ||
+  (typeof x === "object" && !Object.keys(x).length);
 
 // stringify to JSON safely
-export const jsonStringify = obj => {
+export const jsonStringify = (obj, pretty = false) => {
   try {
-    return JSON.stringify(obj);
+    return pretty ? JSON.stringify(obj, null, 2) : JSON.stringify(obj);
   } catch (x) {}
   return "";
 };
@@ -70,4 +70,18 @@ export const digObject = (obj, ...keyList) => {
   let k = keys.shift(),
     nextObj = getProp(obj, k, null);
   return digObject(nextObj, ...keys);
+};
+
+// create query string from object
+export const obj2qs = obj => {
+  if (!isObject(obj)) return "";
+  const parts = [];
+  for (let key in obj) {
+    let val = obj[key];
+    if (!val && val !== 0) continue;
+    let part = encodeURIComponent(key) + "=" + encodeURIComponent(val);
+    parts.push(part);
+  }
+  if (!parts.length) return "";
+  return "?" + parts.join("&");
 };
