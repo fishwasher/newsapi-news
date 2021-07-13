@@ -1,7 +1,7 @@
 import fetch from "unfetch";
 import { ENDPOINT, APIKEY } from "../apiconfig";
 import { obj2qs } from "./util";
-import { setBusy, unsetBusy } from "./actions";
+import { setBusy, setNews } from "./actions";
 import getLogger from "./logger";
 
 const log = getLogger("api", true);
@@ -50,6 +50,8 @@ const callApi = async (url, method = "GET", reqData = null) => {
   return ret;
 };
 
-const getNews = async (opts = null) => {
+const updateNews = async (opts = null) => {
   const url = buildTopNewsUrl(opts);
+  const data = await callApi(url);
+  data && setNews(data);
 };

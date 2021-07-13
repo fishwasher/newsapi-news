@@ -29,5 +29,8 @@
     "build": "webpack",
     "serve": "serve dist",
     "start": "yarn dev && serve dist"
+  },
+  "dependencies": {
+    "local-storage": "^2.0.0"
   }
 }
