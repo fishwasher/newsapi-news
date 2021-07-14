@@ -1,4 +1,4 @@
-import { busy, newsfeed } from "./stores";
+import { busy, articles } from "./stores";
 
 let callCount = 0; // active API calls number to control spinner
 
@@ -13,5 +13,5 @@ export const setBusy = (stateFlag = true) => {
 };
 
 export const setNews = (data)=>{
-  newsfeed.set(data);
+  articles.set(data);
 }

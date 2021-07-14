@@ -7,3 +7,5 @@ export const APIKEY = "YOUR_API_KEY";
 
 // Top news category
 export const CATEGORY = "general";
+
+export const COUNTRY = "us";

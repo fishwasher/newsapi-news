@@ -20,13 +20,20 @@ export const isNumber = x => typeof x === "number" && isFinite(x);
 
 // test if something is a NaN or (+-)Infinity
 export const isBadNumber = x => typeof x === "number" && !isFinite(x);
-ß;
 
 // test if something is a function
 export const isFunction = x => typeof x === "function";
 
+// check valid Date object
+export const isValidDate = x =>
+  x instanceof Date && x.toDateString() !== "Invalid Date";
+
 // failsafe test if an object has a property
 export const hasProp = (obj, propName) => isObject(obj) && propName in obj;
+
+// method exists?
+export const hasMethod = (obj, methodName) =>
+  hasProp(obj, methodName) && typeof obj[methodName] === "function";
 
 // get a property from an object
 export const getProp = (obj, propName, fallback = null) =>
@@ -62,6 +69,17 @@ export const jsonParse = json => {
   return null;
 };
 
+// stringify variables, render null, undefined, false, NaN, Infinity as empty string
+export const strval = (x, decimals = 0) => {
+  if (isString(x)) return x;
+  if (isNone(x) || x === false || isBadNumber(x)) return "";
+  if (isNumber(x)) return x.toFixed(decimals);
+  if (hasMethod(x, "toJSON")) return x.toJSON();
+  if (hasMethod(x, "toString")) return x.toString();
+  if (isObject(x)) return jsonStringify(x);
+  return x + "";
+};
+
 // traverse an object's tree for a (nested) property
 export const digObject = (obj, ...keyList) => {
   if (!keyList.length) return obj;
@@ -85,3 +103,30 @@ export const obj2qs = obj => {
   if (!parts.length) return "";
   return "?" + parts.join("&");
 };
+
+// parse query string
+export const qs2obj = qs => {
+  let s = strval(qs);
+  if (s.startsWith("?")) s = s.substring(1);
+  const o = {};
+  if (!s) return o;
+  s.split("&").forEach(keyval => {
+    let key, val;
+    if (keyval.includes("=")) {
+      [key, val] = keyval.split("=").map(x => decodeURIComponent(x));
+    } else {
+      key = decodeURIComponent(keyval);
+      val = null;
+    }
+    o[key] = val;
+  });
+  return o;
+};
+
+// escape HTML special chars
+export const htmlText = s =>
+  strval(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");

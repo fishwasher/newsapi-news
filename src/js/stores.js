@@ -4,4 +4,4 @@ import { writable } from "svelte/store";
 export const busy = writable(false);
 
 // current data snapshot
-export const newsfeed = writable(null);
+export const articles = writable(null);

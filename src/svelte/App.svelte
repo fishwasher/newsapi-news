@@ -1,11 +1,20 @@
 <script>
   import Spinner from "./Spinner.svelte";
-  import { newsfeed } from "../js/stores";
-  export let name;
+  import Articles from "./Articles.svelte";
+  import { loadFeed } from "../js/api";
+  import getLogger from "../js/logger";
+  import { onMount } from "svelte";
+
+  const log = getLogger("App", 0);
+
+  onMount(() => {
+    log(`App mounted`);
+    loadFeed();
+  });
 </script>
 
 <main>
-  <h1>Hello <span>{name}</span>!</h1>
+  <Articles />
   <Spinner />
 </main>
 
@@ -13,15 +22,10 @@
   @import "../styles/global.less";
 
   main {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     display: flex;
-    flex-flow: row nowrap;
+    flex-flow: row wrap;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
   }
 
   h1 {
